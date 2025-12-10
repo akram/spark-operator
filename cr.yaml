@@ -1,0 +1,20 @@
+# Chart Releaser configuration
+# See: https://github.com/helm/chart-releaser-action
+
+# The base URL of the Helm repository
+# This will be used to generate the repository URL in the index.yaml
+# Format: https://<owner>.github.io/<repo>
+charts-repo-url: https://akram.github.io/spark-operator
+
+# The directory where charts are stored
+charts-dir: charts
+
+# The branch where the Helm repository index will be published
+pages-branch: gh-pages
+
+# The path within the pages branch where the index.yaml and charts will be stored
+pages-path: .
+
+# Whether to skip existing releases
+skip-existing: true
+
