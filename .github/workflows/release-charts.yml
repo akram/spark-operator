@@ -1,0 +1,50 @@
+name: Release Charts
+
+on:
+  push:
+    branches:
+      - odh
+      - main
+      - master
+    paths:
+      - 'charts/**'
+      - '.github/workflows/release-charts.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.7.0
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          charts_dir: charts
+          config: cr.yaml
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          pages_branch: gh-pages
+          pages_path: .
+          skip_existing: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
